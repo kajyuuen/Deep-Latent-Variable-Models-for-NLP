@@ -6,32 +6,8 @@ from src.data_modules.yahoo_data_module import YahooDataModule
 from src.models.mixture_of_multinomials import MixtureOfMultinomials
 from src.guides.amortized_discrete import AmortizedDiscrete
 
+from src.optimize.optimize import optimize
 from src.inference.inference import Inference
-
-def optimize(model,
-             guide,
-             optimizer,
-             data,
-             elbo,
-             epoch = 1000,
-             use_cuda = False):
-    pyro.clear_param_store()
-    svi = pyro.infer.SVI(model,
-                         guide,
-                         optimizer,
-                         loss = elbo)
-    text = data.text
-
-    if use_cuda:
-        text = text.cuda()
-
-    losses = []
-    for _ in range(epoch):
-        losses.append(svi.step(text.transpose(0, 1)) / 
-                        (text.shape[1] * text.shape[0]))
-
-    return losses
-
 
 def main():
     use_cuda = True
