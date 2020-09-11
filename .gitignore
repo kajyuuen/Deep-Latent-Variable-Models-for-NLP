@@ -1,0 +1,8 @@
+venv
+.vscode
+
+__pycache__
+.mypy_cache/
+
+datasets/*
+!.gitkeep
