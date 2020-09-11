@@ -36,7 +36,7 @@ def main():
              optimizer,
              train_iter,
              elbo,
-             epoch = 10,
+             epoch = 1000,
              use_cuda = use_cuda)
 
     # Print result
