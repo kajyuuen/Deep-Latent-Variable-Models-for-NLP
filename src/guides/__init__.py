@@ -1,3 +1,5 @@
-class Guide:
+import torch.nn as nn
+
+class Guide(nn.Module):
     def __init__(self):
-        pass
+        super().__init__()

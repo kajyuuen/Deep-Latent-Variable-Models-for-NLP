@@ -4,17 +4,18 @@ from torch.distributions import constraints
 import pyro
 import pyro.distributions as dist
 
-from src.models.model import Model
+from src.models import Model
 
 class MixtureOfMultinomials(Model):
     def __init__(self,
                  vocab_size: int,
                  num_of_class: int,
                  batch_size: int = 64) -> None:
+        super().__init__()
         self.vocab_size = vocab_size
         self.num_of_class = num_of_class
         self.batch_size = batch_size
-    
+
     def model(self, data):
         num_of_sentence, sentence_length = data.shape
         # NOTE: constraints.simplexってなに？

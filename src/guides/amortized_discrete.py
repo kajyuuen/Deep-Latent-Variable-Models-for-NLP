@@ -1,9 +1,10 @@
+import torch
 from torch.distributions import constraints
 
 import pyro
 import pyro.distributions as dist
 
-from src.guides.guide import Guide
+from src.guides import Guide
 from src.guides.encoder import Encoder
 
 class AmortizedDiscrete(Guide):
@@ -11,6 +12,7 @@ class AmortizedDiscrete(Guide):
                  vocab_size: int,
                  num_of_class: int,
                  batch_size: int = 64) -> None:
+        super().__init__()
         self.vocab_size = vocab_size
         self.num_of_class = num_of_class
         self.batch_size = batch_size

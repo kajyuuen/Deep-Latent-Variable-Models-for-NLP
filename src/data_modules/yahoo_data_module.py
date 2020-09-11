@@ -23,4 +23,4 @@ class YahooDataModule(pl.LightningDataModule):
         train_iter = next(iter(data.BucketIterator(
                 dataset=self.dataset, batch_size=self.batch_size,
             sort_key=lambda x: len(x.text))))
-        return train_iter
+        return train_iter        
