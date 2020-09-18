@@ -19,6 +19,7 @@ class MultiRNN(nn.Module):
             h_0 = torch.zeros(z.shape[0], 1, self.hidden_dim)
             return self.V(h_0), h_0
         e = self.E(x)
+        print(self.W[z].shape)
         # h_t = torch.tanh(torch.einsum("nkh,ch->nck", [self.W[z], e]) 
         #                  + torch.einsum("nkh,nch->nck",[self.U[z], h]))
         h_t = torch.tanh(torch.einsum("nckh,ch->nck", [self.W[z], e]) 
