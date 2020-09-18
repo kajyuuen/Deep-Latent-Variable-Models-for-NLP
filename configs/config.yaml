@@ -1,0 +1,5 @@
+path:
+  dataset: ./datasets/val.txt
+use_cuda: true
+defaults:
+  - inference: mixture_of_multinomials

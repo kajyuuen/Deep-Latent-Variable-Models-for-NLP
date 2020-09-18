@@ -7,7 +7,7 @@ import pyro.distributions as dist
 from src.guides import Guide
 from src.guides.encoder import Encoder
 
-class AmortizedDiscrete(Guide):
+class AmortizedNormal(Guide):
     def __init__(self,
                  vocab_size: int,
                  num_of_class: int,
@@ -26,5 +26,5 @@ class AmortizedDiscrete(Guide):
         encoder = pyro.module("encoder", self.encoder)        
 
         with pyro.plate("n", num_of_sentence, subsample_size = self.batch_size) as ind:
-            mu, _ = encoder(data[ind])
-            z = pyro.sample("z", dist.Categorical(logits = mu))
+            mu, sigma = encoder(data[ind])
+            z = pyro.sample("z", dist.Normal(mu, sigma).independent(1))

@@ -1,0 +1,3 @@
+# @package _group_
+model: "neural_topic_vector"
+guide: "amortized_normal"

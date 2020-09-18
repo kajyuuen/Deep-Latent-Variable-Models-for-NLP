@@ -5,8 +5,9 @@ import pyro
 import pyro.distributions as dist
 
 from src.models import Model
+from src.models.mutli_rnn import MultiRNN
 
-class MixtureOfMultinomials(Model):
+class MixtureOfRNNs(Model):
     def __init__(self,
                  vocab_size: int,
                  num_of_class: int,
@@ -16,20 +17,24 @@ class MixtureOfMultinomials(Model):
         self.num_of_class = num_of_class
         self.batch_size = batch_size
 
+        self.rnn = MultiRNN(self.vocab_size,
+                            self.num_of_class,
+                            20)
+
     def model(self, data):
         num_of_sentence, sentence_length = data.shape
+        rnn = pyro.module("rnn", self.rnn)
         mu = pyro.param("mu", torch.rand(self.num_of_class),
-                         constraint = constraints.simplex)
-        pi = pyro.param("pi", torch.rand(self.num_of_class, self.vocab_size),
                          constraint = constraints.simplex)
         
         with pyro.plate("n", num_of_sentence, subsample_size = self.batch_size) as ind:
             z = pyro.sample("z",
                             dist.Categorical(mu.expand(self.batch_size, self.num_of_class)),
-                            infer = dict(enumerate="parallel"))
-
-            for t in pyro.plate('T', sentence_length):
-                x = pyro.sample(f"x_{t}",
-                                dist.Categorical(pi[z]),
+                            infer = dict(enumerate="sequential"))
+            h = None
+            for t in range(sentence_length):
+                out, h = rnn(data[ind, t-1], z, h)
+                pyro.sample(f"x_{t}",
+                                dist.Categorical(logits=out),
                                 obs = data[ind, t])
            

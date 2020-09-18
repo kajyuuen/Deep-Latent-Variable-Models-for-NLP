@@ -1,0 +1,3 @@
+# @package _group_
+model: mixture_of_multinomials
+guide: amortized_discrete
