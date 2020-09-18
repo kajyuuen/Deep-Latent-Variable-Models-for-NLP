@@ -16,12 +16,10 @@ class MultiRNN(nn.Module):
 
     def forward(self, x, z, h):
         if h is None:
-            h_0 = torch.zeros(z.shape[0], 1, self.hidden_dim)
+            batch_size = z.shape[1]
+            h_0 = torch.zeros(batch_size, 1, self.hidden_dim)
             return self.V(h_0), h_0
         e = self.E(x)
-        print(self.W[z].shape)
-        # h_t = torch.tanh(torch.einsum("nkh,ch->nck", [self.W[z], e]) 
-        #                  + torch.einsum("nkh,nch->nck",[self.U[z], h]))
         h_t = torch.tanh(torch.einsum("nckh,ch->nck", [self.W[z], e]) 
-                         + torch.einsum("nckh,nch->nck",[self.U[z],h]))
+                         + torch.einsum("nckh,cnh->nck",[self.U[z], h])).transpose(0,1)
         return self.V(h_t), h_t

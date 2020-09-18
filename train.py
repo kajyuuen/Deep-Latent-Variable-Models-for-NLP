@@ -78,8 +78,10 @@ def main(cfg: DictConfig):
     plt.ylim(0, 1000)
     plt.savefig("{}.png".format(cfg.inference.model))
 
-    if cfg.inference.model in ["mixture_of_multinomials", "mixture_of_rnn"]:
+    if cfg.inference.model == "mixture_of_multinomials":
         val, args = pyro.param("pi").cpu().sort(dim=1)
+    elif cfg.inference.model == "mixture_of_rnns":
+        val, args = pyro.param("mu").cpu().sort(dim=1)
     elif cfg.inference.model == "neural_topic_vector":
         val, args = pyro.param("mu").cpu().sort(dim=1)
     for j in range(10):
